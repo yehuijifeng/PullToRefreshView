@@ -78,6 +78,16 @@ public class PullToRefreshView extends LinearLayout {
      */
     private OnHeaderRefreshListener mOnHeaderRefreshListener;
 
+    private boolean isLoadMore = true;//是否可以加载更多
+
+    public boolean isLoadMore() {
+        return isLoadMore;
+    }
+
+    public void setLoadMore(boolean loadMore) {
+        isLoadMore = loadMore;
+    }
+
     public PullToRefreshView(Context context) {
         super(context);
         initView();
@@ -102,6 +112,7 @@ public class PullToRefreshView extends LinearLayout {
     private void addHeaderView() {
         // header view
         mHeaderView = new HeaderView(getContext());
+
         mHeaderView.setRefreshListener(new HeaderView.RefreshListener() {
             @Override
             public void onRefreshPrepare(boolean bl, PtrFrameLayout frame) {
@@ -129,6 +140,7 @@ public class PullToRefreshView extends LinearLayout {
     }
 
     private void addFooterView() {
+
         // footer view
         mFooterView = new FootView(getContext());
         measureView(mFooterView);
@@ -235,7 +247,7 @@ public class PullToRefreshView extends LinearLayout {
                 if (mPullState == PULL_DOWN_STATE) {// 执行下拉
                     headerPrepareToRefresh(deltaY);
                     // setHeaderPadding(-mHeaderViewHeight);
-                } else if (mPullState == PULL_UP_STATE) {// 执行上拉
+                } else if (mPullState == PULL_UP_STATE && isLoadMore()) {// 执行上拉
                     footerPrepareToRefresh(deltaY);
                 }
                 mLastMotionY = y;

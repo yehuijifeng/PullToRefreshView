@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.gridfromlist.demo.adapter.GridAdapterTest;
 import com.gridfromlist.demo.bean.TestBean;
 import com.gridfromlist.demo.view.MyGridView;
+import com.gridfromlist.demo.view.OnScollListener;
 import com.gridfromlist.demo.view.PullToRefreshView;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshView
     //private GridAdapter gridAdapter;
     private List<TestBean> testBeens;
     private GridAdapterTest gridAdapterTest;
+    private OnScollListener onScollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +28,25 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshView
         setContentView(R.layout.activity_main);
         main_pull_refresh_view = (PullToRefreshView) findViewById(R.id.main_pull_refresh_view);
         my_gridview = (MyGridView) findViewById(R.id.my_gridview);
+        onScollListener = new OnScollListener();
+        my_gridview.setOnScrollListener(onScollListener);
+        addScollListener();
         initData();
 
+    }
+
+    private void addScollListener() {
+        onScollListener.setOnScollListenerStatus(new OnScollListener.OnScollListenerStatus() {
+            @Override
+            public void onStartLoading() {
+
+            }
+
+            @Override
+            public void isLoadComplete(int isLoadCompleteStatus) {
+                main_pull_refresh_view.setLoadMore(isLoadCompleteStatus == 2);
+            }
+        });
     }
 
     private void initData() {
@@ -42,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshView
     private void addData() {
         testBeens.clear();
         TestBean testBean = new TestBean();
-        for (int i = 0; i < 34; i++) {
+        for (int i = 0; i < 44; i++) {
             testBean.setTestId(i);
             testBean.setTestName("王小鱼 " + i + "号");
             testBean.setTestMoney(i * i);
